@@ -1,8 +1,9 @@
 import java.awt.*;
+import java.io.Serializable;
 import java.util.Random;
 
 
-public class Ball implements Runnable, VisualObject {
+public class Ball implements Runnable, VisualObject, Serializable {
 
     private int width;
     private int height;
@@ -14,30 +15,51 @@ public class Ball implements Runnable, VisualObject {
     private boolean outSide;
     private boolean stopped;
     private BallTask ballTask;
-    private Viewer viewer;
     private Random random;
     private Color color;
+    private Color borderColor;
     private String status;
     private int sleepTime;
     private Rectangle rect;
+    private int size;
+    private Viewer viewer;
+    private boolean running;
+    private Channel channel;
 
-    public Ball(BallTask ballTask, Viewer viewer) {
-        this.ballTask = ballTask;
+    public Ball() {
+        ballThread = new Thread(this);
+        ballThread.start();
+    }
+
+    public Ball(BallTask ballTask, Viewer viewer, Channel channel) {
         this.viewer = viewer;
-        this.width = 100;
-        this.height = 100;
-        this.outSide = true;
         this.random = new Random();
-        this.color = new Color(random.nextInt(255), random.nextInt(255), random.nextInt(255));
+        this.ballTask = ballTask;
+        this.size = this.random.nextInt(150) + 30;
+        this.width = this.size;
+        this.height = this.size;
+        this.outSide = true;
+        this.color = new Color(255);
+        this.borderColor = this.color;
         this.cordY = this.random.nextInt(this.ballTask.getHeight() - (this.height * 3));
         this.cordX = this.random.nextInt(this.ballTask.getWidth() - (this.width * 4));
         this.velY = 1;
         this.velX = 1;
         this.sleepTime = 1;
         this.stopped = false;
+        this.channel = channel;
         this.rect = new Rectangle(this.width, this.height);
         ballThread = new Thread(this);
         ballThread.start();
+    }
+
+
+    public int getSize() {
+        return size;
+    }
+
+    public void setSize(int size) {
+        this.size = size;
     }
 
     public int getWidth() {
@@ -124,6 +146,22 @@ public class Ball implements Runnable, VisualObject {
         this.rect = rect;
     }
 
+    public Color getColor() {
+        return color;
+    }
+
+    public void setColor(Color color) {
+        this.color = color;
+    }
+
+    public Color getBorderColor() {
+        return borderColor;
+    }
+
+    public void setBorderColor(Color borderColor) {
+        this.borderColor = borderColor;
+    }
+
     /**
      * Método para mover la bola
      */
@@ -132,21 +170,20 @@ public class Ball implements Runnable, VisualObject {
         int absY = Math.abs(this.getVelY());
 
         if (!this.stopped) {
-            if(action.equals("left")){
+            if (action.equals("left")) {
                 this.setVelX(absX);
-            }else if(action.equals("right")){
+            } else if (action.equals("right")) {
                 this.setVelX(-absX);
-            }else if(action.equals("up")){
+            } else if (action.equals("up")) {
                 this.setVelY(absY);
-            }else if(action.equals("down")){
+            } else if (action.equals("down")) {
                 this.setVelY(-absY);
+            } else if (action.equals("send")) {
+                //channel.sendBall(this);
             }
             this.rect.setBounds(this.cordX, this.cordY, this.width, this.height);
             cordX = cordX + velX;
             cordY = cordY + velY;
-        }else{
-            velY = 0;
-            velX = 0;
         }
     }
 
@@ -154,12 +191,18 @@ public class Ball implements Runnable, VisualObject {
      * Método para pintar la bola.
      */
     public void paint(Graphics g) {
-        g.setColor(this.color);
+        if (this.isOutSide()) {
+
+            g.setColor(this.color);
+        } else {
+            g.setColor(this.borderColor);
+        }
         g.fillOval(this.cordX, this.cordY, width, height);
     }
 
     public void run() {
-        while (true) {
+        this.running = true;
+        while (running) {
             try {
                 Thread.sleep(this.sleepTime);
                 ballTask.checkMove(this);

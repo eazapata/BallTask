@@ -1,3 +1,5 @@
+import sun.security.jca.GetInstance;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
@@ -10,20 +12,43 @@ public class BallTask extends JFrame {
     private ArrayList<BlackHole> blackHoles;
     private Dimension dimension;
     private Statistics statistics;
+    private ArrayList<Object> connection;
+    private Object instance;
+    private Channel channel;
+    private ServerConnection serverConnection;
+    private ClientConnection clientConnection;
+
+    public ArrayList<Ball> getBalls() {
+        return balls;
+    }
+
+    public void setBalls(ArrayList<Ball> balls) {
+        this.balls = balls;
+    }
+
+    public void setInstance(Object instance) {
+        this.instance = instance;
+    }
+
+    public Channel getChannel() {
+        return channel;
+    }
 
     public BallTask() {
+        this.channel = new Channel();
+        this.serverConnection = new ServerConnection(this.channel);
+        this.clientConnection = new ClientConnection(this.channel);
+
         this.dimension = getToolkit().getScreenSize();
         this.setSize(dimension.width, dimension.height);
         this.setVisible(true);
         this.setLayout(new GridBagLayout());
         GridBagConstraints c = new GridBagConstraints();
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-
         this.statistics = new Statistics();
         this.viewer = new Viewer(dimension.width, dimension.height);
         createBlackHoles();
         createBalls();
-
 
         this.addControlPanel(c);
         this.addViewer(c);
@@ -34,7 +59,6 @@ public class BallTask extends JFrame {
     public static void main(String[] args) {
 
         BallTask ballTask = new BallTask();
-
     }
 
     private void addControlPanel(GridBagConstraints c) {
@@ -65,7 +89,7 @@ public class BallTask extends JFrame {
     private void createBalls() {
         this.balls = new ArrayList<Ball>();
         for (int i = 0; i < 10; i++) {
-            Ball ball = new Ball(this, this.viewer);
+            Ball ball = new Ball(this, this.viewer, this.channel);
             this.balls.add(ball);
             this.statistics.setBall();
         }
@@ -82,17 +106,22 @@ public class BallTask extends JFrame {
     }
 
     public void checkMove(Ball ball) {
-        String action = "";
         if (ball.getCordX() - ball.getVelX() <= 0) {
-            action = "left";
+            if (this.instance instanceof ClientConnection) {
+                ball.moveBall("send");
+            } else {
+                ball.moveBall("left");
+            }
         } else if (ball.getCordX() + ball.getVelX() >= this.viewer.getWidth() - ball.getWidth()) {
-            action = "right";
+            ball.moveBall("right");
+
         } else if (ball.getCordY() - ball.getVelY() <= 0) {
-            action = "up";
+            ball.moveBall("up");
         } else if (ball.getCordY() + ball.getVelY() >= this.viewer.getHeight() - ball.getHeight()) {
-            action = "down";
+            ball.moveBall("down");
+        } else {
+            ball.moveBall("");
         }
-        ball.moveBall(action);
         checkBlackHole(ball);
 
 
@@ -109,6 +138,8 @@ public class BallTask extends JFrame {
             }
         }
     }
+
+
 }
 
 

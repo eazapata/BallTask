@@ -1,5 +1,4 @@
 import java.awt.*;
-import java.util.ArrayList;
 import java.util.Random;
 
 public class BlackHole implements VisualObject {
@@ -12,15 +11,13 @@ public class BlackHole implements VisualObject {
     private BallTask ballTask;
     private Rectangle rect;
     private Color color;
-    private int count;
-    private ArrayList<Ball> ball;
+    private Ball ball;
 
     public BlackHole(BallTask ballTask) {
         this.ballTask = ballTask;
         this.random = new Random();
-        this.ball = new ArrayList<Ball>();
-        this.width = 250;
-        this.height = 100;
+        this.width = 500;
+        this.height = 200;
         this.cordY = this.random.nextInt(this.ballTask.getHeight() - (this.height * 2));
         this.cordX = this.random.nextInt(this.ballTask.getWidth() - (this.width * 2));
         this.rect = new Rectangle(width, height);
@@ -45,15 +42,15 @@ public class BlackHole implements VisualObject {
     //Metodo para añadir una pelota
     public synchronized void putBall(Ball ball) {
 
-        while (this.count >= 1) {
+        while (this.ball != null) {
             try {
                 wait();
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }
-        this.ball.add(ball);
-        this.count++;
+        this.ball = ball;
+        ball.setBorderColor(new Color(255,0,0));
         ball.setSleepTime(50);
         ball.setOutSide(false);
         notifyAll();
@@ -61,10 +58,10 @@ public class BlackHole implements VisualObject {
 
     //Metodo para retirar la pelota
     public synchronized void removeBall(Ball ball) {
-        if (this.ball.size() > 0) {
-            if (ball.equals(this.ball.get(0))) {
-                this.count--;
-                this.ball.remove(0);
+        if (this.ball != null) {
+            if (ball.equals(this.ball)) {
+                this.ball = null;
+                ball.setBorderColor(ball.getColor());
                 ball.setOutSide(true);
                 ball.setSleepTime(1);
                 notifyAll();

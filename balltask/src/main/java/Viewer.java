@@ -24,15 +24,18 @@ public class Viewer extends Canvas implements Runnable {
         this.blackHoles = blackHoles;
     }
 
+    public ArrayList<Ball> getBalls() {
+        return balls;
+    }
+
     /**
      * Carga un fondo de pantalla para el viewer
      *
-     * @return
+     *
      */
     public void loadBackground() {
-        BufferedImage background = null;
         try {
-            File file = new File("F:\\Datos\\Usuario\\src\\balltask\\src\\main\\resources\\fondo.png");
+            File file = new File("F:\\Datos\\Usuario\\src\\BallTaskRepo\\BallTask\\balltask\\src\\main\\resources\\fondo.png");
             this.background = ImageIO.read(file);
         } catch (Exception e) {
             e.printStackTrace();
@@ -42,9 +45,7 @@ public class Viewer extends Canvas implements Runnable {
     public void paint() {
         BufferStrategy bs;
         bs = this.getBufferStrategy();
-        if (bs == null) {
 
-        }
         Graphics g = bs.getDrawGraphics();
         g.drawImage(background, 0, 0, this.getWidth(), this.getHeight(), null);
         if (this.blackHoles != null) {
@@ -61,9 +62,6 @@ public class Viewer extends Canvas implements Runnable {
         g.dispose();
     }
 
-    /**
-     *
-     */
     public void run() {
         this.createBufferStrategy(2);
         do {
