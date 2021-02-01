@@ -12,9 +12,10 @@ public class Viewer extends Canvas implements Runnable {
     private ArrayList<BlackHole> blackHoles;
     private BallTask ballTask;
 
-    public Viewer(int width, int height,BallTask ballTask) {
-        this.ballTask = ballTask;
+
+    public Viewer(int width, int height, BallTask ballTask) {
         this.setSize(width, height);
+        this.ballTask = ballTask;
     }
 
     public void setBalls(ArrayList<Ball> balls) {

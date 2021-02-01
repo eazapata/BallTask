@@ -1,12 +1,18 @@
 
+import helper.BallTaskHelper;
 
+import java.io.BufferedWriter;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.net.ConnectException;
 import java.net.Socket;
 
 public class ClientConnection implements Runnable {
 
     private Socket clientSocket;
     private String ip = "localhost";
-    private int port = 9999;
+    private int port = 9998;
     private Channel channel;
     private boolean running = true;
 

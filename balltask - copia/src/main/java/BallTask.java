@@ -30,6 +30,7 @@ public class BallTask extends JFrame {
         GridBagConstraints c = new GridBagConstraints();
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         this.statistics = new Statistics();
+
         this.viewer = new Viewer(dimension.width, dimension.height,this);
         createBlackHoles();
         createBalls();
