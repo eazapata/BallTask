@@ -1,21 +1,19 @@
+import java.awt.*;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.Scanner;
 
 public class Channel implements Runnable {
 
-    private int port = 9999;
-    private ServerSocket ServerSocket;
     private Socket socket;
     private boolean ok;
-    private boolean running;
     private Thread channelThread;
     private BallTask ballTask;
 
-    public Channel(BallTask ballTask){
+    public Channel(BallTask ballTask) {
         this.ballTask = ballTask;
     }
+
 
     public synchronized boolean isOk() {
         return ok;
@@ -52,15 +50,39 @@ public class Channel implements Runnable {
         this.channelThread.start();
     }
 
+    private synchronized Ball createBall(String ballInfo) {
+        String[] info = ballInfo.split(",");
+        Ball ball = new Ball();
+        ball.setBallTask(this.ballTask);
+        ball.setSize(Integer.parseInt(info[0]));
+        ball.setOutSide(true);
+        ball.setColor(new Color(0, 255, 0));
+        ball.setBorderColor(new Color(0));
+        ball.setCordY(Integer.parseInt(info[3]));
+        ball.setCordX(0);
+        ball.setVelX(Integer.parseInt(info[1]));
+        ball.setVelY(Integer.parseInt(info[2]));
+        ball.setSleepTime(1);
+        ball.setStopped(false);
+        ball.setChannel(this);
+        ball.setRect(new Rectangle(ball.getSize(), ball.getSize()));
+        ball.getRect().setBounds(ball.getCordX(), ball.getCordY(), ball.getSize(), ball.getSize());
+        ball.setBallThread(new Thread(ball));
+        ball.getBallThread().start();
+        return ball;
+    }
+
     //Método para enviar pelotas
     public void send(Ball ball) {
         try {
-            PrintWriter writer = new PrintWriter((this.socket.getOutputStream()), true);
-            String ballInfo = String.valueOf(ball.getSize()) + "," +
-                    String.valueOf(ball.getVelX() + "," +
-                            String.valueOf(ball.getCordY()) + "," +
-                            String.valueOf(ball.getCordX()));
-            writer.println(ballInfo);
+            DataOutputStream writer = new DataOutputStream((this.socket.getOutputStream()));
+            String ballInfo = ball.getSize() + "," +
+                    ball.getVelX() + "," +
+                    ball.getVelY() + "," +
+                    ball.getCordY() + "," +
+                    ball.getCordX() + "\n";
+            writer.writeUTF(ballInfo);
+           this.ballTask.removeBall(ball);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -68,18 +90,20 @@ public class Channel implements Runnable {
 
     //Metodo para recibir pelotas
     public void receiveInfo() {
-        BufferedReader reader = null;
+        DataInputStream reader = null;
         try {
-            reader = new BufferedReader(new InputStreamReader(this.socket.getInputStream()));
-            String received = reader.readLine();
-            this.ballTask.addBall(received);
+            reader = new DataInputStream(this.socket.getInputStream());
+            String received = null;
+            received = reader.readUTF();
+
             if (received == null) {
                 System.out.println("Content is null");
                 this.ok = false;
             } else {
-
                 System.out.println(received);
             }
+            Ball ball = createBall(received);
+            this.ballTask.addNewBall(ball);
         } catch (IOException e) {
             e.printStackTrace();
         }

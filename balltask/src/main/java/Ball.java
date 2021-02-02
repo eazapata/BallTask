@@ -24,20 +24,17 @@ public class Ball implements Runnable, VisualObject, Serializable {
     private boolean running;
     private Channel channel;
 
-    public Ball() {
-        ballThread = new Thread(this);
-        ballThread.start();
+    public Ball(){
+
     }
 
-    public Ball(BallTask ballTask, Viewer viewer, Channel channel) {
-        this.viewer = viewer;
+    public Ball(BallTask ballTask, Channel channel) {
         this.random = new Random();
         this.ballTask = ballTask;
         this.size = this.random.nextInt(150) + 30;
-
         this.outSide = true;
         this.color = new Color(255);
-        this.borderColor = this.color;
+        this.borderColor = new Color(0);
         this.cordY = this.random.nextInt(this.ballTask.getHeight() - (this.size * 3));
         this.cordX = this.random.nextInt(this.ballTask.getWidth() - (this.size * 4));
         this.velY = 1;
@@ -49,7 +46,6 @@ public class Ball implements Runnable, VisualObject, Serializable {
         ballThread = new Thread(this);
         ballThread.start();
     }
-
 
     public Thread getBallThread() {
         return ballThread;
@@ -81,6 +77,14 @@ public class Ball implements Runnable, VisualObject, Serializable {
 
     public void setViewer(Viewer viewer) {
         this.viewer = viewer;
+    }
+
+    public boolean isRunning() {
+        return running;
+    }
+
+    public void setRunning(boolean running) {
+        this.running = running;
     }
 
     public int getSize() {
@@ -183,22 +187,34 @@ public class Ball implements Runnable, VisualObject, Serializable {
         int absY = Math.abs(this.getVelY());
 
         if (!this.stopped) {
-            if (action.equals("left")) {
+            if (action.equals("right") && (this.channel.isOk())) {
+                this.running= false;
+                this.channel.send(this);
+
+            } else if (action.equals("left")) {
                 this.setVelX(absX);
+                this.rect.setBounds(this.cordX, this.cordY, this.size, this.size);
+                cordX = cordX + velX;
+                cordY = cordY + velY;
             } else if (action.equals("right")) {
                 this.setVelX(-absX);
+                this.rect.setBounds(this.cordX, this.cordY, this.size, this.size);
+                cordX = cordX + velX;
+                cordY = cordY + velY;
             } else if (action.equals("up")) {
                 this.setVelY(absY);
+                this.rect.setBounds(this.cordX, this.cordY, this.size, this.size);
+                cordX = cordX + velX;
+                cordY = cordY + velY;
             } else if (action.equals("down")) {
                 this.setVelY(-absY);
-            }
-            this.rect.setBounds(this.cordX, this.cordY, this.size, this.size);
-            cordX = cordX + velX;
-            cordY = cordY + velY;
-            if (action.equals("right") && (this.channel.isOk())) {
-                this.channel.send(this);
-                this.ballTask.removeBall(this);
-                this.running = false;
+                this.rect.setBounds(this.cordX, this.cordY, this.size, this.size);
+                cordX = cordX + velX;
+                cordY = cordY + velY;
+            }else{
+                this.rect.setBounds(this.cordX, this.cordY, this.size, this.size);
+                cordX = cordX + velX;
+                cordY = cordY + velY;
             }
         }
     }
@@ -207,13 +223,11 @@ public class Ball implements Runnable, VisualObject, Serializable {
      * Método para pintar la bola.
      */
     public void paint(Graphics g) {
-        if (this.isOutSide()) {
+        if(running){
 
-            g.setColor(this.color);
-        } else {
             g.setColor(this.borderColor);
+            g.fillOval(this.cordX, this.cordY, this.size, this.size);
         }
-        g.fillOval(this.cordX, this.cordY, this.size, this.size);
     }
 
     public void run() {

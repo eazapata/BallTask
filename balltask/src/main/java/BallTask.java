@@ -1,9 +1,8 @@
-import sun.security.jca.GetInstance;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.Random;
+
 
 
 public class BallTask extends JFrame {
@@ -11,11 +10,29 @@ public class BallTask extends JFrame {
     private ControlPanel controlPanel;
     private ArrayList<Ball> balls;
     private ArrayList<BlackHole> blackHoles;
+    private ArrayList<Ball> toRemove = new ArrayList<Ball>();
+    private ArrayList<Ball> toAdd = new ArrayList<Ball>();
     private Dimension dimension;
     private Statistics statistics;
     private Channel channel;
     private ServerConnection serverConnection;
     private ClientConnection clientConnection;
+
+    public ArrayList<Ball> getToRemove() {
+        return toRemove;
+    }
+
+    public void setToRemove(ArrayList<Ball> toRemove) {
+        this.toRemove = toRemove;
+    }
+
+    public ArrayList<Ball> getToAdd() {
+        return toAdd;
+    }
+
+    public void setToAdd(ArrayList<Ball> toAdd) {
+        this.toAdd = toAdd;
+    }
 
     public BallTask() {
         this.setTitle("original");
@@ -30,18 +47,15 @@ public class BallTask extends JFrame {
         GridBagConstraints c = new GridBagConstraints();
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         this.statistics = new Statistics();
-        this.viewer = new Viewer(dimension.width, dimension.height,this);
-        createBlackHoles();
-        createBalls();
-
+        this.viewer = new Viewer(dimension.width, dimension.height, this);
+        //createBlackHoles();
+        this.balls =  createBalls();
+        this.viewer.setBalls(this.balls);
         this.addControlPanel(c);
         this.addViewer(c);
         this.pack();
     }
 
-    public ArrayList<Ball> getBalls() {
-        return balls;
-    }
 
     public static void main(String[] args) {
 
@@ -73,37 +87,16 @@ public class BallTask extends JFrame {
 
     }
 
-    public void addBall(String ballInfo) {
 
-        String[] info = ballInfo.split(",");
-        Ball ball = new Ball();
-        ball.setViewer(this.viewer);
-        ball.setBallTask(this);
-        ball.setSize(Integer.parseInt(info[0]));
-        ball.setOutSide(true);
-        ball.setColor(new Color(0, 255, 0));
-        ball.setBorderColor(new Color(0));
-        ball.setCordY(Integer.parseInt(info[1]));
-        ball.setCordX(Integer.parseInt(info[2]));
-        ball.setVelX(1);
-        ball.setVelY(1);
-        ball.setSleepTime(1);
-        ball.setStopped(false);
-        ball.setChannel(this.channel);
-        ball.setRect(new Rectangle(ball.getSize(), ball.getSize()));
-        ball.setBallThread(new Thread(ball));
-        ball.getBallThread().start();
-        addBall(ball);
-    }
 
-    private void createBalls() {
-        this.balls = new ArrayList<Ball>();
-        for (int i = 0; i < 10; i++) {
-            Ball ball = new Ball(this, this.viewer, this.channel);
-            this.balls.add(ball);
+    private ArrayList<Ball> createBalls() {
+        ArrayList<Ball> balls = new ArrayList<Ball>();
+        for (int i = 0; i < 40; i++) {
+            Ball ball = new Ball(this,  this.channel);
+            balls.add(ball);
             this.statistics.setBall();
         }
-        this.viewer.setBalls(this.balls);
+        return balls;
     }
 
     private void createBlackHoles() {
@@ -133,7 +126,7 @@ public class BallTask extends JFrame {
         } else {
             ball.moveBall("");
         }
-        checkBlackHole(ball);
+        //checkBlackHole(ball);
 
 
     }
@@ -150,13 +143,18 @@ public class BallTask extends JFrame {
         }
     }
 
-    public synchronized void removeBall(Ball ball){
-        this.balls.remove(ball);
+    public void addNewBall(Ball ball){
+        this.toAdd.add(ball);
+        // this.balls.add(ball);
+        //  this.viewer.setBalls(this.balls);
     }
 
-    public synchronized void addBall(Ball ball){
-        this.balls.add(ball);
+    public void removeBall(Ball ball){
+        this.toRemove.add(ball);
+        //  this.balls.remove(ball);
+        // this.viewer.setBalls(this.balls);
     }
+
 
 }
 

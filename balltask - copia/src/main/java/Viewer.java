@@ -12,17 +12,16 @@ public class Viewer extends Canvas implements Runnable {
     private ArrayList<BlackHole> blackHoles;
     private BallTask ballTask;
 
-
     public Viewer(int width, int height, BallTask ballTask) {
-        this.setSize(width, height);
         this.ballTask = ballTask;
+        this.setSize(width, height);
     }
 
     public void setBalls(ArrayList<Ball> balls) {
         this.balls = balls;
     }
 
-    public void setBlackHoles(ArrayList<BlackHole> blackHoles){
+    public void setBlackHoles(ArrayList<BlackHole> blackHoles) {
         this.blackHoles = blackHoles;
     }
 
@@ -32,8 +31,6 @@ public class Viewer extends Canvas implements Runnable {
 
     /**
      * Carga un fondo de pantalla para el viewer
-     *
-     *
      */
     public void loadBackground() {
         try {
@@ -55,19 +52,23 @@ public class Viewer extends Canvas implements Runnable {
                 blackHole.paint(g);
             }
         }
-        if (this.ballTask.getBalls() != null) {
-            for (Ball ball : balls) {
+        if (this.balls != null) {
+            for (Ball ball : this.balls) {
                 ball.paint(g);
             }
+            this.balls.removeAll(this.ballTask.getToRemove());
+            this.balls.addAll(this.ballTask.getToAdd());
         }
+
         bs.show();
         g.dispose();
+
     }
 
     public void run() {
         this.createBufferStrategy(2);
         do {
-            this.paint();
+            paint();
         } while (true);
     }
 }
