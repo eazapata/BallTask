@@ -55,36 +55,12 @@ public class Ball implements Runnable, VisualObject, Serializable {
         this.ballThread = ballThread;
     }
 
-    public Channel getChannel() {
-        return channel;
-    }
-
     public void setChannel(Channel channel) {
         this.channel = channel;
     }
 
-    public BallTask getBallTask() {
-        return ballTask;
-    }
-
     public void setBallTask(BallTask ballTask) {
         this.ballTask = ballTask;
-    }
-
-    public Viewer getViewer() {
-        return viewer;
-    }
-
-    public void setViewer(Viewer viewer) {
-        this.viewer = viewer;
-    }
-
-    public boolean isRunning() {
-        return running;
-    }
-
-    public void setRunning(boolean running) {
-        this.running = running;
     }
 
     public int getSize() {
@@ -139,18 +115,6 @@ public class Ball implements Runnable, VisualObject, Serializable {
         this.outSide = outSide;
     }
 
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public int getSleepTime() {
-        return sleepTime;
-    }
-
     public void setSleepTime(int sleepTime) {
         this.sleepTime = sleepTime;
     }
@@ -169,10 +133,6 @@ public class Ball implements Runnable, VisualObject, Serializable {
 
     public void setColor(Color color) {
         this.color = color;
-    }
-
-    public Color getBorderColor() {
-        return borderColor;
     }
 
     public void setBorderColor(Color borderColor) {

@@ -28,6 +28,9 @@ public class ServerConnection implements Runnable {
         this.serverThread.start();
     }
 
+    /**
+     * Método encargado de establecer conexión con el cliente
+     */
     private void startConnection() {
         try {
          //   while (this.socket == null) {

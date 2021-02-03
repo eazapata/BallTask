@@ -10,12 +10,17 @@ public class ClientConnection implements Runnable {
     private Channel channel;
     private boolean running = true;
 
+    //CONSTRUCTOR
+
     public ClientConnection(Channel channel) {
         this.channel = channel;
         Thread clientThread = new Thread(this);
         clientThread.start();
     }
 
+    /**
+     * Método encargado de iniciar la conexión con el server
+     */
     private void startConnection() {
         Socket socket = null;
         try {
@@ -44,8 +49,6 @@ public class ClientConnection implements Runnable {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-
         }
-
     }
 }

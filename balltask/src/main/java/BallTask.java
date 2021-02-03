@@ -17,6 +17,9 @@ public class BallTask extends JFrame {
     private ServerConnection serverConnection;
     private ClientConnection clientConnection;
 
+    //GETTERS Y SETTERS
+    //------------------------------------------------------------------------
+
     public ArrayList<Ball> getToRemove() {
         return toRemove;
     }
@@ -33,12 +36,15 @@ public class BallTask extends JFrame {
         this.toAdd = toAdd;
     }
 
+    /**
+     * Consctructor con parámetros.
+     */
     public BallTask() {
         this.setTitle("Original");
         this.channel = new Channel(this);
 
         this.serverConnection = new ServerConnection(this.channel);
-        //this.clientConnection = new ClientConnection(this.channel);
+        this.clientConnection = new ClientConnection(this.channel);
         this.dimension = getToolkit().getScreenSize();
         this.setSize(dimension.width, dimension.height);
         this.setVisible(true);
@@ -55,11 +61,47 @@ public class BallTask extends JFrame {
         this.pack();
     }
 
-
     public static void main(String[] args) {
 
         BallTask ballTask = new BallTask();
     }
+
+    //MÉTODOS PÚBLICOS
+
+    public void checkMove(Ball ball) {
+        if (ball.getCordX() - ball.getVelX() <= 0) {
+
+            ball.moveBall("left");
+
+        } else if (ball.getCordX() + ball.getVelX() >= this.viewer.getWidth() - ball.getSize()) {
+
+            ball.moveBall("right");
+
+        } else if (ball.getCordY() - ball.getVelY() <= 0) {
+
+            ball.moveBall("up");
+
+        } else if (ball.getCordY() + ball.getVelY() >= this.viewer.getHeight() - ball.getSize()) {
+            ball.moveBall("down");
+        } else {
+            ball.moveBall("");
+        }
+        //checkBlackHole(ball);
+
+
+    }
+
+    public void addNewBall(Ball ball) {
+        this.balls.add(ball);
+
+    }
+
+    public void removeBall(Ball ball) {
+        this.balls.remove(ball);
+
+    }
+
+    //MÉTODOS PRIVADOS
 
     private void addControlPanel(GridBagConstraints c) {
         this.controlPanel = new ControlPanel(statistics, balls);
@@ -86,6 +128,17 @@ public class BallTask extends JFrame {
 
     }
 
+    private void checkBlackHole(Ball ball) {
+
+        for (BlackHole blackHole : this.blackHoles) {
+            if (blackHole.getRect().intersects(ball.getRect()) && ball.isOutSide()) {
+                blackHole.putBall(ball);
+            }
+            if (!blackHole.getRect().intersects(ball.getRect()) && !ball.isOutSide()) {
+                blackHole.removeBall(ball);
+            }
+        }
+    }
 
     private ArrayList<Ball> createBalls() {
         ArrayList<Ball> balls = new ArrayList<Ball>();
@@ -106,50 +159,9 @@ public class BallTask extends JFrame {
         this.viewer.setBlackHoles(this.blackHoles);
     }
 
-    public void checkMove(Ball ball) {
-        if (ball.getCordX() - ball.getVelX() <= 0) {
-
-            ball.moveBall("left");
-
-        } else if (ball.getCordX() + ball.getVelX() >= this.viewer.getWidth() - ball.getSize()) {
-
-            ball.moveBall("right");
-
-        } else if (ball.getCordY() - ball.getVelY() <= 0) {
-
-            ball.moveBall("up");
-
-        } else if (ball.getCordY() + ball.getVelY() >= this.viewer.getHeight() - ball.getSize()) {
-            ball.moveBall("down");
-        } else {
-            ball.moveBall("");
-        }
-        //checkBlackHole(ball);
 
 
-    }
 
-    private void checkBlackHole(Ball ball) {
-
-        for (BlackHole blackHole : this.blackHoles) {
-            if (blackHole.getRect().intersects(ball.getRect()) && ball.isOutSide()) {
-                blackHole.putBall(ball);
-            }
-            if (!blackHole.getRect().intersects(ball.getRect()) && !ball.isOutSide()) {
-                blackHole.removeBall(ball);
-            }
-        }
-    }
-
-    public void addNewBall(Ball ball) {
-        this.balls.add(ball);
-
-    }
-
-    public void removeBall(Ball ball) {
-        this.balls.remove(ball);
-
-    }
 
 
 }

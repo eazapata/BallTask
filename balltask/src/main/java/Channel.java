@@ -15,7 +15,8 @@ public class Channel implements Runnable {
         this.ballTask = ballTask;
     }
 
-
+    // GETTERS Y SETTERS
+   // ----------------------------------------------------------
     public synchronized boolean isOk() {
         return ok;
     }
@@ -83,6 +84,10 @@ public class Channel implements Runnable {
         return ball;
     }
 
+    public void sendACK(String message){
+
+    }
+
     /**
      * Método para enviar la información relevante de una pelota a través del canal.
      * @param ball objeto que queremos enviar a través del channel.
@@ -118,11 +123,6 @@ public class Channel implements Runnable {
                 this.ok = false;
             } else {
                 System.out.println(received);
-            }
-            if(received.equals("channel ok?")){
-                DataOutputStream out = new DataOutputStream(this.socket.getOutputStream());
-                String works = "channel ok";
-                out.writeUTF(works);
             }
             Ball ball = createBall(received);
             this.ballTask.addNewBall(ball);
