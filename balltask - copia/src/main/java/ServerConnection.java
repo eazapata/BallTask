@@ -1,5 +1,6 @@
 
 
+import javax.xml.crypto.Data;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -34,7 +35,8 @@ public class ServerConnection implements Runnable {
                 if (!this.channel.isOk()) {
                     String clientAddress = this.socket.getInetAddress().getHostAddress();
                     System.out.println("New connection from: " + clientAddress);
-                    this.channel.setSocket(this.socket);
+                    ClientIdentified clientIdentified = new ClientIdentified(this.socket, this.channel);
+                    clientIdentified.getIdentifiedThread().start();
                 }
             }
         } catch (IOException e) {
@@ -55,3 +57,4 @@ public class ServerConnection implements Runnable {
 
     }
 }
+

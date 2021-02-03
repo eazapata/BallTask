@@ -43,6 +43,10 @@ public class Channel implements Runnable {
         return socket;
     }
 
+    /**
+     * Método para asignar un socket al channel
+     * @param socket
+     */
     public synchronized void setSocket(Socket socket) {
         this.ok = true;
         this.socket = socket;
@@ -50,7 +54,12 @@ public class Channel implements Runnable {
         this.channelThread.start();
     }
 
-    private synchronized Ball createBall(String ballInfo) {
+    /**
+     * Método para crear una pelota nueva a partir de la info de un string.
+     * @param ballInfo información relevante de una pelota.
+     * @return la nueva pelota.
+     */
+    private Ball createBall(String ballInfo) {
         String[] info = ballInfo.split(",");
         Ball ball = new Ball();
         ball.setBallTask(this.ballTask);
@@ -72,7 +81,10 @@ public class Channel implements Runnable {
         return ball;
     }
 
-    //Método para enviar pelotas
+    /**
+     * Método para enviar la información relevante de una pelota a través del canal.
+     * @param ball objeto que queremos enviar a través del channel.
+     */
     public void send(Ball ball) {
         try {
             DataOutputStream writer = new DataOutputStream((this.socket.getOutputStream()));
@@ -82,13 +94,15 @@ public class Channel implements Runnable {
                     ball.getCordY() + "," +
                     ball.getCordX() + "\n";
             writer.writeUTF(ballInfo);
-           this.ballTask.removeBall(ball);
+            this.ballTask.removeBall(ball);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    //Metodo para recibir pelotas
+    /**
+     * Método que usamos para recibir la información de la pelota, crear una nueva y añadirla a la lista del balltask.
+     */
     public void receiveInfo() {
         DataInputStream reader = null;
         try {

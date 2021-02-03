@@ -180,7 +180,7 @@ public class Ball implements Runnable, VisualObject, Serializable {
     }
 
     /**
-     * Método para mover la bola
+     * Método para mover la bola, recibe la acción que le dice que hacer a la pelota
      */
     public void moveBall(String action) {
         int absX = Math.abs(this.getVelX());
@@ -190,7 +190,6 @@ public class Ball implements Runnable, VisualObject, Serializable {
             if (action.equals("right") && (this.channel.isOk())) {
                 this.running= false;
                 this.channel.send(this);
-
             } else if (action.equals("left")) {
                 this.setVelX(absX);
                 this.rect.setBounds(this.cordX, this.cordY, this.size, this.size);
@@ -220,7 +219,7 @@ public class Ball implements Runnable, VisualObject, Serializable {
     }
 
     /**
-     * Método para pintar la bola.
+     * Método para pintar la bola. Recibe el graphics del viewer
      */
     public void paint(Graphics g) {
         if(running){

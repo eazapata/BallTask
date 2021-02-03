@@ -1,9 +1,7 @@
 
-
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
-
 
 
 public class BallTask extends JFrame {
@@ -36,9 +34,9 @@ public class BallTask extends JFrame {
     }
 
     public BallTask() {
-        this.setTitle("original");
+        this.setTitle("Copia");
         this.channel = new Channel(this);
-        this.serverConnection = new ServerConnection(this.channel);
+        //this.serverConnection = new ServerConnection(this.channel);
         this.clientConnection = new ClientConnection(this.channel);
 
         this.dimension = getToolkit().getScreenSize();
@@ -50,7 +48,7 @@ public class BallTask extends JFrame {
         this.statistics = new Statistics();
         this.viewer = new Viewer(dimension.width, dimension.height, this);
         //createBlackHoles();
-        this.balls =  createBalls();
+        this.balls = createBalls();
         this.viewer.setBalls(this.balls);
         this.addControlPanel(c);
         this.addViewer(c);
@@ -89,11 +87,10 @@ public class BallTask extends JFrame {
     }
 
 
-
     private ArrayList<Ball> createBalls() {
         ArrayList<Ball> balls = new ArrayList<Ball>();
-        for (int i = 0; i < 40; i++) {
-            Ball ball = new Ball(this,  this.channel);
+        for (int i = 0; i < 1; i++) {
+            Ball ball = new Ball(this, this.channel);
             balls.add(ball);
             this.statistics.setBall();
         }
@@ -144,16 +141,14 @@ public class BallTask extends JFrame {
         }
     }
 
-    public void addNewBall(Ball ball){
-        this.toAdd.add(ball);
-       // this.balls.add(ball);
-      //  this.viewer.setBalls(this.balls);
+    public void addNewBall(Ball ball) {
+        this.balls.add(ball);
+
     }
 
-    public void removeBall(Ball ball){
-        this.toRemove.add(ball);
-      //  this.balls.remove(ball);
-       // this.viewer.setBalls(this.balls);
+    public void removeBall(Ball ball) {
+        this.balls.remove(ball);
+
     }
 
 

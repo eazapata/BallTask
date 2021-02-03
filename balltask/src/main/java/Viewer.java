@@ -53,11 +53,16 @@ public class Viewer extends Canvas implements Runnable {
             }
         }
         if (this.balls != null) {
-            for (Ball ball : this.balls) {
+            for (int i = 0; i <this.balls.size() ; i++) {
+                this.balls.get(i).paint(g);
+            }
+          /*  for (Ball ball : this.balls) {
                 ball.paint(g);
             }
             this.balls.removeAll(this.ballTask.getToRemove());
             this.balls.addAll(this.ballTask.getToAdd());
+            this.ballTask.getToRemove().clear();
+            this.ballTask.getToAdd().clear();*/
         }
 
         bs.show();
