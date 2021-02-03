@@ -36,9 +36,9 @@ public class BallTask extends JFrame {
     public BallTask() {
         this.setTitle("Original");
         this.channel = new Channel(this);
+
         this.serverConnection = new ServerConnection(this.channel);
         //this.clientConnection = new ClientConnection(this.channel);
-
         this.dimension = getToolkit().getScreenSize();
         this.setSize(dimension.width, dimension.height);
         this.setVisible(true);

@@ -29,16 +29,17 @@ public class ClientIdentified implements Runnable {
                 DataInputStream input = new DataInputStream(this.socket.getInputStream());
                 String header = input.readUTF();
                 System.out.println(header);
+
                 if (header.equals("BALLTASK")) {
                     System.out.println("Server: Setting ");
                     this.channel.setSocket(this.socket);
+
                     DataOutputStream out = new DataOutputStream(this.socket.getOutputStream());
                     out.writeUTF("OK");
                     this.clientIdentified = true;
+
                 } else {
                     System.out.println("This connection is not a balltask.");
-                    this.socket.close();
-                    this.socket = null;
                     this.clientIdentified = true;
 
                 }

@@ -8,6 +8,7 @@ public class ClientIdentified implements Runnable {
     private Socket socket;
     private Channel channel;
     private Thread identifiedThread;
+    private boolean clientIdentified;
 
     public Thread getIdentifiedThread() {
         return identifiedThread;
@@ -17,36 +18,33 @@ public class ClientIdentified implements Runnable {
         this.socket = socket;
         this.channel = channel;
         identifiedThread = new Thread(this);
-
     }
 
 
     @Override
     public void run() {
-        boolean clientOkay = false;
-        while(!clientOkay){
+        this.clientIdentified = false;
+        while (!this.clientIdentified) {
             try {
                 DataInputStream input = new DataInputStream(this.socket.getInputStream());
                 String header = input.readUTF();
                 System.out.println(header);
-                if(header.equals("BALLTASK")){
+                if (header.equals("BALLTASK")) {
                     System.out.println("Server: Setting ");
                     this.channel.setSocket(this.socket);
                     DataOutputStream out = new DataOutputStream(this.socket.getOutputStream());
                     out.writeUTF("OK");
-                    clientOkay = true;
-                }else{
+                    this.clientIdentified = true;
+                } else {
                     System.out.println("This connection is not a balltask.");
                     this.socket.close();
                     this.socket = null;
-                    clientOkay = true;
+                    this.clientIdentified = true;
 
                 }
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
         }
-
     }
 }

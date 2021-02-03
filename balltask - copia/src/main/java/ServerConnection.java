@@ -30,15 +30,15 @@ public class ServerConnection implements Runnable {
 
     private void startConnection() {
         try {
-            while (this.socket == null) {
+         //   while (this.socket == null) {
                 this.socket = serverSocket.accept();
-                if (!this.channel.isOk()) {
+                if(!this.channel.isOk()) {
                     String clientAddress = this.socket.getInetAddress().getHostAddress();
                     System.out.println("New connection from: " + clientAddress);
                     ClientIdentified clientIdentified = new ClientIdentified(this.socket, this.channel);
                     clientIdentified.getIdentifiedThread().start();
                 }
-            }
+            //  }
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -23,6 +23,7 @@ public class ClientConnection implements Runnable {
             DataOutputStream out = new DataOutputStream(socket.getOutputStream());
             String greeting = "BALLTASK";
             out.writeUTF(greeting);
+
             DataInputStream in = new DataInputStream(socket.getInputStream());
             String response = in.readUTF();
             if (!this.channel.isOk() && response.equals("OK")) {
