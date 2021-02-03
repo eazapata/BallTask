@@ -85,7 +85,15 @@ public class Channel implements Runnable {
     }
 
     public void sendACK(String message){
+        DataOutputStream out = null;
+        try {
+            out = new DataOutputStream(this.socket.getOutputStream());
+            String works = "channel ok?";
+            out.writeUTF(works);
 
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -124,6 +132,7 @@ public class Channel implements Runnable {
             } else {
                 System.out.println(received);
             }
+
             Ball ball = createBall(received);
             this.ballTask.addNewBall(ball);
         } catch (IOException e) {

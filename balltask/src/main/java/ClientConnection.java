@@ -5,7 +5,7 @@ import java.net.Socket;
 public class ClientConnection implements Runnable {
 
 
-    private String ip = "192.168.0.16";
+    private String ip = "192.168.0.11";
     private int port = 9999;
     private Channel channel;
     private boolean running = true;
