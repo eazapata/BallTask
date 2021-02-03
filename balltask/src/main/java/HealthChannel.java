@@ -13,6 +13,7 @@ public class HealthChannel implements Runnable {
     private Socket socket;
     private boolean ACK;
 
+
     public HealthChannel(Channel channel, Socket socket) {
         this.channel = channel;
         this.socket = socket;
@@ -20,7 +21,7 @@ public class HealthChannel implements Runnable {
         this.healthThread.start();
     }
 
-    public void setACK(boolean ACK) {
+    public synchronized void setACK(boolean ACK) {
         this.ACK = ACK;
     }
 
@@ -41,7 +42,7 @@ public class HealthChannel implements Runnable {
 
             if (!response.equals("channel ok")) {
                 this.channel.setOk(false);
-                this.socket = null;
+            //    this.socket = null;
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -52,14 +53,14 @@ public class HealthChannel implements Runnable {
 
     @Override
     public void run() {
-        while (this.channel.isOk()) {
+      /*  while (this.channel.isOk()) {
             try {
                 Thread.sleep(15);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
             sendOk();
-        }
+        }*/
 
     }
 }

@@ -35,8 +35,16 @@ public class Statistics {
         return this.insideBH;
     }
 
-    public void removeBall(){
-        this.insideBH -=1;
+    public void removeBall() {
+        this.totalBalls -= 1;
+    }
+
+    public void setBallInside(){
+        this.insideBH += 1;
+    }
+
+    public void removeBallInside(){
+        this.insideBH -= 1;
     }
 
 }

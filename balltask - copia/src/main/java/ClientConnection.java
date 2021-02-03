@@ -5,10 +5,12 @@ import java.net.Socket;
 public class ClientConnection implements Runnable {
 
 
-    private String ip = "192.168.0.11";
-    private int port = 9998;
+    private String ip = "192.168.0.16";
+    private int port = 9999;
     private Channel channel;
     private boolean running = true;
+
+    //CONSTRUCTOR
 
     public ClientConnection(Channel channel) {
         this.channel = channel;
@@ -16,6 +18,9 @@ public class ClientConnection implements Runnable {
         clientThread.start();
     }
 
+    /**
+     * Método encargado de iniciar la conexión con el server
+     */
     private void startConnection() {
         Socket socket = null;
         try {
@@ -44,8 +49,6 @@ public class ClientConnection implements Runnable {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-
         }
-
     }
 }
