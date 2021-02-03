@@ -9,6 +9,7 @@ public class Channel implements Runnable {
     private boolean ok;
     private Thread channelThread;
     private BallTask ballTask;
+    private HealthChannel healthChannel;
 
     public Channel(BallTask ballTask) {
         this.ballTask = ballTask;
@@ -52,6 +53,7 @@ public class Channel implements Runnable {
         this.socket = socket;
         this.channelThread = new Thread(this);
         this.channelThread.start();
+        this.healthChannel = new HealthChannel(this,this.socket);
     }
 
     /**
@@ -96,7 +98,8 @@ public class Channel implements Runnable {
             writer.writeUTF(ballInfo);
             this.ballTask.removeBall(ball);
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("Connection reset");
+            this.ok = false;
         }
     }
 
@@ -116,10 +119,16 @@ public class Channel implements Runnable {
             } else {
                 System.out.println(received);
             }
+            if(received.equals("channel ok?")){
+                DataOutputStream out = new DataOutputStream(this.socket.getOutputStream());
+                String works = "channel ok";
+                out.writeUTF(works);
+            }
             Ball ball = createBall(received);
             this.ballTask.addNewBall(ball);
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("Connection reset");
+            this.ok = false;
         }
     }
 
