@@ -92,11 +92,13 @@ public class BallTask extends JFrame {
     }
 
     public void addNewBall(Ball ball) {
+        this.statistics.setBall();
         this.balls.add(ball);
 
     }
 
     public void removeBall(Ball ball) {
+        this.statistics.removeBall();
         this.balls.remove(ball);
 
     }
@@ -153,7 +155,7 @@ public class BallTask extends JFrame {
     private void createBlackHoles() {
         this.blackHoles = new ArrayList<BlackHole>();
         for (int i = 0; i < 2; i++) {
-            BlackHole blackHole = new BlackHole(this);
+            BlackHole blackHole = new BlackHole(this,statistics);
             blackHoles.add(blackHole);
         }
         this.viewer.setBlackHoles(this.blackHoles);

@@ -124,6 +124,10 @@ public class Channel implements Runnable {
             } else {
                 System.out.println(received);
             }
+            if(received.equals( "channel ok?")){
+                this.healthChannel.setACK(true);
+
+            }
             Ball ball = createBall(received);
             this.ballTask.addNewBall(ball);
         } catch (IOException e) {
