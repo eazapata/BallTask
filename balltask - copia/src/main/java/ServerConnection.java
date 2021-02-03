@@ -8,7 +8,7 @@ import java.util.ArrayList;
 
 public class ServerConnection implements Runnable {
 
-    private int port = 9998;
+    private int port = 9999;
     private BallTask ballTask;
     private Thread serverThread;
     private Channel channel;

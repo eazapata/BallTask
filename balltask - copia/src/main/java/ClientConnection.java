@@ -6,7 +6,7 @@ public class ClientConnection implements Runnable {
 
 
     private String ip = "192.168.0.16";
-    private int port = 9999;
+    private int port = 9998;
     private Channel channel;
     private boolean running = true;
 

@@ -9,7 +9,7 @@ public class Channel implements Runnable {
     private boolean ok;
     private Thread channelThread;
     private BallTask ballTask;
-    private HealthChannel healthChannel;
+
 
     public Channel(BallTask ballTask) {
         this.ballTask = ballTask;
@@ -54,7 +54,7 @@ public class Channel implements Runnable {
         this.socket = socket;
         this.channelThread = new Thread(this);
         this.channelThread.start();
-        this.healthChannel = new HealthChannel(this,this.socket);
+       // this.healthChannel = new HealthChannel(this,this.socket);
     }
 
     /**

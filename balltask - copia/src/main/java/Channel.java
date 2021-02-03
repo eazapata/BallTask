@@ -9,14 +9,14 @@ public class Channel implements Runnable {
     private boolean ok;
     private Thread channelThread;
     private BallTask ballTask;
-    private HealthChannel healthChannel;
+
 
     public Channel(BallTask ballTask) {
         this.ballTask = ballTask;
     }
 
     // GETTERS Y SETTERS
-    // ----------------------------------------------------------
+   // ----------------------------------------------------------
     public synchronized boolean isOk() {
         return ok;
     }
@@ -47,7 +47,6 @@ public class Channel implements Runnable {
 
     /**
      * Método para asignar un socket al channel
-     *
      * @param socket
      */
     public synchronized void setSocket(Socket socket) {
@@ -55,11 +54,11 @@ public class Channel implements Runnable {
         this.socket = socket;
         this.channelThread = new Thread(this);
         this.channelThread.start();
+       // this.healthChannel = new HealthChannel(this,this.socket);
     }
 
     /**
      * Método para crear una pelota nueva a partir de la info de un string.
-     *
      * @param ballInfo información relevante de una pelota.
      * @return la nueva pelota.
      */
@@ -85,13 +84,12 @@ public class Channel implements Runnable {
         return ball;
     }
 
-    public void sendACK(String message) {
+    public void sendACK(String message){
 
     }
 
     /**
      * Método para enviar la información relevante de una pelota a través del canal.
-     *
      * @param ball objeto que queremos enviar a través del channel.
      */
     public void send(Ball ball) {
@@ -128,7 +126,6 @@ public class Channel implements Runnable {
             }
             Ball ball = createBall(received);
             this.ballTask.addNewBall(ball);
-
         } catch (IOException e) {
             System.out.println("Connection reset");
             this.ok = false;
