@@ -34,7 +34,7 @@ public class Viewer extends Canvas implements Runnable {
      */
     public void loadBackground() {
         try {
-            File file = new File("F:\\Datos\\Usuario\\src\\BallTaskRepo\\BallTask\\balltask\\src\\main\\resources\\fondo.png");
+            File file = new File("src/main/resources/fondo.png");
             this.background = ImageIO.read(file);
         } catch (Exception e) {
             e.printStackTrace();

@@ -24,15 +24,18 @@ public class ClientConnection implements Runnable {
     private void startConnection() {
         Socket socket = null;
         try {
-            socket = new Socket(ip, port);
-            DataOutputStream out = new DataOutputStream(socket.getOutputStream());
-            String greeting = "BALLTASK";
-            out.writeUTF(greeting);
-            DataInputStream in = new DataInputStream(socket.getInputStream());
-            String response = in.readUTF();
-            if (!this.channel.isOk() && response.equals("OK")) {
-                this.channel.setSocket(socket);
-                System.out.println("Conexion establecida");
+            while (socket == null) {
+
+                socket = new Socket(ip, port);
+                DataOutputStream out = new DataOutputStream(socket.getOutputStream());
+                String greeting = "BALLTASK";
+                out.writeUTF(greeting);
+                DataInputStream in = new DataInputStream(socket.getInputStream());
+                String response = in.readUTF();
+                if (!this.channel.isOk() && response.equals("OK")) {
+                    this.channel.setSocket(socket);
+                    System.out.println("Conexion establecida");
+                }
             }
         } catch (Exception e) {
             System.out.println("Setting socket");
@@ -45,7 +48,7 @@ public class ClientConnection implements Runnable {
         while (this.running) {
             try {
                 startConnection();
-                Thread.sleep(2000);
+                Thread.sleep(200);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

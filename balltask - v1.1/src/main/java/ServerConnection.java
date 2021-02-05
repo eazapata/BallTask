@@ -33,7 +33,7 @@ public class ServerConnection implements Runnable {
      */
     private void startConnection() {
         try {
-         //   while (this.socket == null) {
+            while (this.socket == null) {
                 this.socket = serverSocket.accept();
                 if(!this.channel.isOk()) {
                     String clientAddress = this.socket.getInetAddress().getHostAddress();
@@ -41,7 +41,7 @@ public class ServerConnection implements Runnable {
                     ClientIdentified clientIdentified = new ClientIdentified(this.socket, this.channel);
                     clientIdentified.getIdentifiedThread().start();
                 }
-            //  }
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -94,6 +94,7 @@ public class Channel implements Runnable {
             out.writeUTF(message);
 
         } catch (IOException e) {
+            this.ok = false;
             e.printStackTrace();
         }
     }

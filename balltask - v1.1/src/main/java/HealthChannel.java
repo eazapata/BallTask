@@ -41,7 +41,7 @@ public class HealthChannel implements Runnable{
             }
             if(!this.health){
                 this.channel.setOk(false);
-                try {
+               try {
                     this.channel.getSocket().close();
                     this.channel.setSocket(null);
                 } catch (IOException e) {
