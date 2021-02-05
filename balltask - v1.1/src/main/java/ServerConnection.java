@@ -8,7 +8,7 @@ import java.util.ArrayList;
 
 public class ServerConnection implements Runnable {
 
-    private int port = 9998;
+    private int port = 9999;
     private BallTask ballTask;
     private Thread serverThread;
     private Channel channel;
@@ -33,7 +33,7 @@ public class ServerConnection implements Runnable {
      */
     private void startConnection() {
         try {
-            while (this.socket == null) {
+          if (!this.channel.isOk()) {
                 this.socket = serverSocket.accept();
                 if(!this.channel.isOk()) {
                     String clientAddress = this.socket.getInetAddress().getHostAddress();
@@ -41,7 +41,7 @@ public class ServerConnection implements Runnable {
                     ClientIdentified clientIdentified = new ClientIdentified(this.socket, this.channel);
                     clientIdentified.getIdentifiedThread().start();
                 }
-            }
+           }
         } catch (IOException e) {
             e.printStackTrace();
         }

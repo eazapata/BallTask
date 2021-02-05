@@ -24,8 +24,7 @@ public class ClientConnection implements Runnable {
     private void startConnection() {
         Socket socket = null;
         try {
-            while (socket == null) {
-
+         if (!this.channel.isOk()) {
                 socket = new Socket(ip, port);
                 DataOutputStream out = new DataOutputStream(socket.getOutputStream());
                 String greeting = "BALLTASK";
@@ -36,7 +35,7 @@ public class ClientConnection implements Runnable {
                     this.channel.setSocket(socket);
                     System.out.println("Conexion establecida");
                 }
-            }
+          }
         } catch (Exception e) {
             System.out.println("Setting socket");
             //log.error("failed to connect to server", e);

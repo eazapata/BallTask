@@ -39,7 +39,7 @@ public class Ball implements Runnable, VisualObject, Serializable {
         this.cordX = this.random.nextInt(this.ballTask.getWidth() - (this.size * 4));
         this.velY = 1;
         this.velX = 1;
-        this.sleepTime = 1;
+        this.sleepTime = 20;
         this.stopped = false;
         this.channel = channel;
         this.rect = new Rectangle(this.size, this.size);

@@ -77,7 +77,7 @@ public class Channel implements Runnable {
         ball.setCordX(0);
         ball.setVelX(Integer.parseInt(info[2]));
         ball.setVelY(Integer.parseInt(info[3]));
-        ball.setSleepTime(1);
+        ball.setSleepTime(20);
         ball.setStopped(false);
         ball.setChannel(this);
         ball.setRect(new Rectangle(ball.getSize(), ball.getSize()));
@@ -151,7 +151,7 @@ public class Channel implements Runnable {
     }
 
     public void run() {
-        while (this.isOk()) {
+        while (this.ok) {
             try {
                 receiveInfo();
             } catch (Exception e) {

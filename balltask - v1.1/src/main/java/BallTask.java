@@ -142,7 +142,7 @@ public class BallTask extends JFrame {
 
     private ArrayList<Ball> createBalls() {
         ArrayList<Ball> balls = new ArrayList<Ball>();
-        for (int i = 0; i < 1; i++) {
+        for (int i = 0; i < 50; i++) {
             Ball ball = new Ball(this, this.channel);
             balls.add(ball);
             this.statistics.setBall();
